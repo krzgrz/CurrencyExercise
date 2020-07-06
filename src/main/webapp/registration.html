@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <content tag="javascript">
+            <script type="text/javascript" src="/jquery-2.2.0.min.js"></script>
+            <script type="text/javascript" src="/jquery-ui.min.js"></script>
+            <script type="text/javascript" src="/jquery-ui.js"></script>
+            <script type="text/javascript" src="/registration.js"></script>
+        </content>
+        <form id="registrationForm" method="POST" action="/registration">
+            <table>
+                <tbody>
+                <tr>
+                    <th>PESEL</th><td><input name="pesel"/></td>
+                </tr>
+                <tr>
+                    <th>First name</th><td><input name="firstName"/></td>
+                </tr>
+                <tr>
+                    <th>Last name</th><td><input name="lastName"/></td>
+                </tr>
+                <tr>
+                    <th>Initial balance PLN</th><td><input name="inititalBalancePLN"/></td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="button" onclick="submitRegistration('/registration','/rest-api/registration')">Submit</button>
+        </form>
+    </body>
+</html>
