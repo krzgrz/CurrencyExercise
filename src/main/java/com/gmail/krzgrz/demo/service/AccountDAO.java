@@ -30,8 +30,8 @@ public class AccountDAO {
         histories.get(new PESEL ("12345678901")).get(0).setExchangeTimestamp(dateFormat.parse("2020-07-04 13:23:45"));
     }
 
-    public AccountRegistration get (String id) {
-        AccountRegistration accountRegistration = accounts.get(new PESEL (id));
+    public AccountRegistration get (PESEL pesel) {
+        AccountRegistration accountRegistration = accounts.get(pesel);
         if (accountRegistration == null) {
             // for now
 //            accountRegistration = new AccountRegistration (id,"","",new BigDecimal(0));
@@ -54,8 +54,8 @@ public class AccountDAO {
         }
     }
 
-    public Collection <ExchangeTransaction> getAccountHistory (String id) {
-        List <ExchangeTransaction> history = histories.getOrDefault(new PESEL (id), new ArrayList ());
+    public Collection <ExchangeTransaction> getAccountHistory (PESEL pesel) {
+        List <ExchangeTransaction> history = histories.getOrDefault(pesel, new ArrayList ());
         return history;
     }
 

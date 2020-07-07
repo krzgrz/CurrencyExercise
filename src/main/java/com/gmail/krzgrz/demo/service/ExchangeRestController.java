@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
+import com.gmail.krzgrz.demo.domain.PESEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class ExchangeRestController {
     public AccountRegistration getAccount (@PathVariable String id) {
         // TODO: verify that id looks like a PESEL, ie. 11 digits and maybe checksum as well
         // in order to differentiate "invalid argument" from "not found".
-        AccountRegistration accountRegistration = accountDAO.get(id);
+        AccountRegistration accountRegistration = accountDAO.get(new PESEL (id));
         return accountRegistration;
     }
 
@@ -82,7 +83,7 @@ public class ExchangeRestController {
         // Complete exchange transaction...
         exchangeTransaction.setExchangeTimestamp(new Date ());
         //
-        AccountRegistration accountRegistration = accountDAO.get(pesel);
+        AccountRegistration accountRegistration = accountDAO.get(new PESEL (pesel));
         accountDAO.save(accountRegistration, exchangeTransaction);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }

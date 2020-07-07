@@ -2,6 +2,7 @@ package com.gmail.krzgrz.demo.service;
 
 import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
+import com.gmail.krzgrz.demo.domain.PESEL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,9 +59,9 @@ public class ExchangeController {
         mv.addObject("dateFormat", dateFormat);
         mv.addObject("currency1", Currency.USD);
         mv.addObject("currency2", Currency.PLN);
-        mv.addObject("accountRegistration", accountDAO.get(id));
-        mv.addObject("accountRegistration", accountDAO.get(id));
-        mv.addObject("accountHistory", accountDAO.getAccountHistory(id));
+        mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
+        mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
+        mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));
         return mv;
     }
 }
