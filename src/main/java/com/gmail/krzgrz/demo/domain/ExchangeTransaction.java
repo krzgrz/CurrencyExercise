@@ -12,16 +12,16 @@ import java.util.Date;
  * It may be in one of three states: ordered, ready or completed.
  * </p><p>
  * An {@link ExchangeTransaction} is created using {@link #ExchangeTransaction(Currency, BigDecimal, Currency, BigDecimal)}
- * in the ordered state. That state represents a customer's request to exchange one currency for another and consist
+ * in the ordered state. That state represents a customer's request to exchange one currency for another and consists
  * of two distinct currencies (one being sold, the other being bought) and exactly one positive amount expressed
  * in either currency. The amount expressed in the other currency must be omitted at this stage.
  * </p><p>
  * An ordered {@link ExchangeTransaction} is then amended with exchange rate ({@link #setExchangeRate(BigDecimal)}
- * and {@link #setRateDirection(RateDirection)} necessary for its execution. Once amended, the exchange transaction
+ * and {@link #setRateDirection(RateDirection)}) necessary for its execution. Once amended, the exchange transaction
  * becomes "ready".
  * </p><p>
- * Finally, the transaction becomes completed with a call to {@link #setExchangeTimestamp(Date)}, which also calculates
- * one of the amounts, omitted during creation.
+ * Finally, the transaction becomes completed with a call to {@link #setExchangeTimestamp(Date)}.
+ * That call also calculates one of the amounts, which was omitted during creation.
  * </p>
  * @author kgrzeda
  */
@@ -50,8 +50,8 @@ public class ExchangeTransaction {
     public ExchangeTransaction (Currency currencySold, BigDecimal amountSold, Currency currencyBought, BigDecimal amountBought) {
         this.currencySold = currencySold;
         this.currencyBought = currencyBought;
-        this.amountSold = amountSold;
-        this.amountBought = amountBought;
+        this.amountSold = amountSold != null ? amountSold.setScale(2) : null;
+        this.amountBought = amountBought != null ? amountBought.setScale(2) : null;
     }
 
     /**
@@ -127,6 +127,7 @@ public class ExchangeTransaction {
                 default:
                     throw new IllegalArgumentException ();
             }
+            amountSold = amountSold.setScale(2);
         } else if ((amountBought == null) && (amountSold != null)) {
             switch (rateDirection) {
                 case SOLD_VS_BOUGHT:
@@ -138,6 +139,7 @@ public class ExchangeTransaction {
                 default:
                     throw new IllegalArgumentException ();
             }
+            amountBought = amountBought.setScale(2);
         } else {
             throw new IllegalStateException ();
         }
