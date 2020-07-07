@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <content tag="javascript">
+            <script type="text/javascript" src="/jquery-2.2.0.min.js"></script>
+            <script type="text/javascript" src="/jquery-ui.min.js"></script>
+            <script type="text/javascript" src="/jquery-ui.js"></script>
+            <script type="text/javascript" src="/registration.js"></script>
+        </content>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>PESEL</td>
+                <td id="pesel" th:text="${accountRegistration.pesel}"/>
+            </tr>
+            <tr>
+                <td>First name</td>
+                <td th:text="${accountRegistration.getFirstName()}"/>
+            </tr>
+            <tr>
+                <td>Last name</td>
+                <td th:text="${accountRegistration.lastName}"/>
+            </tr>
+        </tbody>
+    </table>
+
+    <form id="exchangeTransactionForm">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date and time</th>
+                    <th th:text="${currency1}"/>
+                    <th th:text="${currency2}"/>
+                    <th>Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>x</td>
+                <td>y</td>
+                <td>x</td>
+                <td>z</td>
+            </tr>
+            <tr th:each="exchangeTransaction: ${accountHistory}">
+                <td>aaa</td>
+                <td th:text="${exchangeTransaction.getSignedAmount(currency1)}"/>
+                <td th:text="${exchangeTransaction.getSignedAmount(currency2)}"/>
+                <td>aaa</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>
+                    <button type="button" onclick="submitExchangeTransaction('right', '/rest-api/exchange', '');">USD->PLN</button>
+                    <button type="button" onclick="submitExchangeTransaction('left', '/rest-api/exchange', '');">USD<-PLN</button>
+                </td>
+                <td><input id="amount1"/></td>
+                <td><input id="amount2"/></td>
+                <td>1 USD = 3 PLN</td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+    </body>
+</html>
