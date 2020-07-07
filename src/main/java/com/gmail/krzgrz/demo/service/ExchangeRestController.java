@@ -40,13 +40,13 @@ public class ExchangeRestController {
     public AccountRegistration getAccount (@PathVariable String id) {
         // TODO: verify that id looks like a PESEL, ie. 11 digits and maybe checksum as well
         // in order to differentiate "invalid argument" from "not found".
-        AccountRegistration accountRegistration = accountDAO.get(new PESEL (id));
+        AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (id));
         return accountRegistration;
     }
 
     @GetMapping("/rest-api/registration")
     public Collection <AccountRegistration> getAllAccounts () {
-        return accountDAO.getAllAccounts();
+        return accountDAO.getAllAccountRegistrations();
     }
 
     /**
@@ -83,7 +83,7 @@ public class ExchangeRestController {
         // Complete exchange transaction...
         exchangeTransaction.setExchangeTimestamp(new Date ());
         //
-        AccountRegistration accountRegistration = accountDAO.get(new PESEL (pesel));
+        AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (pesel));
         accountDAO.save(accountRegistration, exchangeTransaction);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }

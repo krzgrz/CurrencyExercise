@@ -10,6 +10,25 @@
             <script type="text/javascript" src="/jquery-ui.js"></script>
             <script type="text/javascript" src="/registration.js"></script>
         </content>
+        <table>
+            <thead>
+                <tr>
+                    <th>PESEL</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Initial balance PLN</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ar: ${accountRegistrations}">
+                    <td th:text="${ar.getPesel()}"/>
+                    <td th:text="${ar.getFirstName()}"/>
+                    <td th:text="${ar.getLastName()}"/>
+                    <td th:text="${ar.getInitialBalancePLN()}"/>
+                </tr>
+            </tbody>
+        </table>
         <form id="registrationForm" method="POST" action="/registration">
             <table>
                 <tbody>

@@ -11,8 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.TimeZone;
 import java.util.function.Function;
 
 /**
@@ -58,8 +56,8 @@ public class ExchangeController {
         mv.addObject("dateFormat", dateFormat);
         mv.addObject("currency1", Currency.USD);
         mv.addObject("currency2", Currency.PLN);
-        mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
-        mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
+        mv.addObject("accountRegistration", accountDAO.getAccountRegistration(new PESEL (id)));
+        mv.addObject("accountRegistration", accountDAO.getAccountRegistration(new PESEL (id)));
         mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));
         return mv;
     }
@@ -68,7 +66,7 @@ public class ExchangeController {
     public ModelAndView getRegistration () {
         ModelAndView mv = new ModelAndView ();
         mv.setViewName("registration");
-//        mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));
+        mv.addObject("accountRegistrations", accountDAO.getAllAccountRegistrations());
         return mv;
     }
 }

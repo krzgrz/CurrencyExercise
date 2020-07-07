@@ -30,16 +30,21 @@ public class AccountDAO {
         histories.get(new PESEL ("12345678901")).get(0).setExchangeTimestamp(dateFormat.parse("2020-07-04 13:23:45"));
     }
 
-    public AccountRegistration get (PESEL pesel) {
+    /**
+     * Returns account metadata for given PESEL.
+     * @param pesel
+     * @return  May be null if not found.
+     */
+    public AccountRegistration getAccountRegistration (PESEL pesel) {
         AccountRegistration accountRegistration = accounts.get(pesel);
-        if (accountRegistration == null) {
-            // for now
-//            accountRegistration = new AccountRegistration (id,"","",new BigDecimal(0));
-        }
         return accountRegistration;
     }
 
-    public Collection <AccountRegistration> getAllAccounts () {
+    /**
+     * Returns account metadata for all accounts in the application.
+     * @return  Never null but may be empty.
+     */
+    public Collection <AccountRegistration> getAllAccountRegistrations () {
         return accounts.values();
     }
 
