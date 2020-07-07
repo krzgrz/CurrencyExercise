@@ -36,11 +36,11 @@ public class ExchangeRestController {
     @Autowired
     RateService rateService;
 
-    @GetMapping("/registration/{id}")
-    public AccountRegistration getAccount (@PathVariable String id) {
+    @GetMapping("/rest-api/registration/{pesel}")
+    public AccountRegistration getAccount (@PathVariable String pesel) {
         // TODO: verify that id looks like a PESEL, ie. 11 digits and maybe checksum as well
         // in order to differentiate "invalid argument" from "not found".
-        AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (id));
+        AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (pesel));
         return accountRegistration;
     }
 
