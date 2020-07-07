@@ -28,25 +28,19 @@
                     <td th:text="${ar.getInitialBalancePLN()}"/>
                 </tr>
             </tbody>
+            <form id="registrationForm" method="POST" action="/registration">
+            <tfoot>
+                <tr>
+                    <td><input name="pesel"/></td>
+                    <td><input name="firstName"/></td>
+                    <td><input name="lastName"/></td>
+                    <td><input name="inititalBalancePLN"/></td>
+                    <td>
+                        <button type="button" onclick="submitRegistration('/registration','/rest-api/registration')">Submit</button>
+                    </td>
+                </tr>
+            </tfoot>
+            </form>
         </table>
-        <form id="registrationForm" method="POST" action="/registration">
-            <table>
-                <tbody>
-                <tr>
-                    <th>PESEL</th><td><input name="pesel"/></td>
-                </tr>
-                <tr>
-                    <th>First name</th><td><input name="firstName"/></td>
-                </tr>
-                <tr>
-                    <th>Last name</th><td><input name="lastName"/></td>
-                </tr>
-                <tr>
-                    <th>Initial balance PLN</th><td><input name="inititalBalancePLN"/></td>
-                </tr>
-                </tbody>
-            </table>
-            <button type="button" onclick="submitRegistration('/registration','/rest-api/registration')">Submit</button>
-        </form>
     </body>
 </html>
