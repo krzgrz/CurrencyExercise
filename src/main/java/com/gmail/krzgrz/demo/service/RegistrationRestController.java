@@ -3,9 +3,8 @@ package com.gmail.krzgrz.demo.service;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
 
+import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gmail.krzgrz.demo.domain.AccountRegistration;
 
+/**
+ * Provides REST API for our two services: account registration and exchange transactions.
+ * As the code develops, it would be most likely split into two separate classes.
+ */
 @RestController
 public class RegistrationRestController {
 
@@ -28,6 +31,9 @@ public class RegistrationRestController {
 
     @Autowired
     AccountDAO accountDAO;
+
+    @Autowired
+    RateService rateService;
 
     @GetMapping("/registration/{id}")
     public AccountRegistration getAccount (@PathVariable String id) {
@@ -56,17 +62,27 @@ public class RegistrationRestController {
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }
 
-    @PostMapping("/rest-api/exchange/{id}")
-    public ResponseEntity <Void> orderTransaction (@PathVariable String id, @RequestBody ExchangeTransaction exchangeTransaction) {
+    @PostMapping("/rest-api/exchange/{pesel}")
+    public ResponseEntity <Void> orderTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {
         if ( ! exchangeTransaction.isProperlyOrdered()) {
             throw new IllegalArgumentException();
         }
-        // TODO: get data!
-        exchangeTransaction.setExchangeRate(1.23);
-        exchangeTransaction.setExchangeTime(new Date ());
-        exchangeTransaction.setRateDirection(true);
+        // TODO: this code may need generalization if more currencies are to be supported...
+        BigDecimal exchangeRate = rateService.getExchangeRate(Currency.USD, Currency.PLN);
+        ExchangeTransaction.RateDirection rateDirection = null;
+        if ((exchangeTransaction.getCurrencyBought() == Currency.USD) && (exchangeTransaction.getCurrencySold() == Currency.PLN)) {
+            rateDirection = ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD;
+        } else if ((exchangeTransaction.getCurrencySold() == Currency.USD) && (exchangeTransaction.getCurrencyBought() == Currency.PLN)) {
+            rateDirection = ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT;
+        } else {
+            throw new IllegalArgumentException ("Unsupported currency pair: " + exchangeTransaction.getCurrencySold() + "/" + exchangeTransaction.getCurrencyBought());
+        }
+        exchangeTransaction.setExchangeRate(exchangeRate);
+        exchangeTransaction.setRateDirection(rateDirection);
+        // Complete exchange transaction...
+        exchangeTransaction.setExchangeTimestamp(new Date ());
         //
-        AccountRegistration accountRegistration = accountDAO.get(id);
+        AccountRegistration accountRegistration = accountDAO.get(pesel);
         accountDAO.save(accountRegistration, exchangeTransaction);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }

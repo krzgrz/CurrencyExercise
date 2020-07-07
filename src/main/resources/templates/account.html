@@ -40,6 +40,9 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td colspan="4">No data</td>
+                </tr>
             <tr>
                 <td>x</td>
                 <td>y</td>
@@ -47,10 +50,10 @@
                 <td>z</td>
             </tr>
             <tr th:each="exchangeTransaction: ${accountHistory}">
-                <td>aaa</td>
+                <td th:text="${dateFormat.format(exchangeTransaction.getExchangeTimestamp())}"/>
                 <td th:text="${exchangeTransaction.getSignedAmount(currency1)}"/>
                 <td th:text="${exchangeTransaction.getSignedAmount(currency2)}"/>
-                <td>aaa</td>
+                <td th:text="${exchangeRateFormatter.apply(exchangeTransaction)}"/>
             </tr>
             </tbody>
             <tfoot>

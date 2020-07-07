@@ -1,12 +1,22 @@
 package com.gmail.krzgrz.demo.service;
 
 import com.gmail.krzgrz.demo.domain.Currency;
+import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.TimeZone;
+import java.util.function.Function;
+
+/**
+ * Provides UI for accounts present in the application.
+ */
 @Controller
 public class ExchangeController {
 
@@ -17,6 +27,35 @@ public class ExchangeController {
     public ModelAndView getAccountHistory (@PathVariable String id) {
         ModelAndView mv = new ModelAndView ();
         mv.setViewName("account");
+        // TODO handle null timestamp in a safe way
+        SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+//        dateFormat.setTimeZone(TimeZone.getTimeZone(Z));
+
+        Function <ExchangeTransaction, String> exchangeRateFormatter = new Function <ExchangeTransaction, String> () {
+
+            @Override
+            public String apply (ExchangeTransaction exchangeTransaction) {
+                switch (exchangeTransaction.getRateDirection()) {
+                    case BOUGHT_VS_SOLD:
+                        return MessageFormat.format("1 {0} = {1} {2}",
+                            exchangeTransaction.getCurrencyBought(),
+                            exchangeTransaction.getExchangeRate(),
+                            exchangeTransaction.getCurrencySold()
+                        );
+                    case SOLD_VS_BOUGHT:
+                        return MessageFormat.format("1 {2} = {1} {0}",
+                            exchangeTransaction.getCurrencyBought(),
+                            exchangeTransaction.getExchangeRate(),
+                            exchangeTransaction.getCurrencySold()
+                        );
+                }
+                return "?";
+            }
+        };
+
+
+        mv.addObject("exchangeRateFormatter", exchangeRateFormatter);
+        mv.addObject("dateFormat", dateFormat);
         mv.addObject("currency1", Currency.USD);
         mv.addObject("currency2", Currency.PLN);
         mv.addObject("accountRegistration", accountDAO.get(id));

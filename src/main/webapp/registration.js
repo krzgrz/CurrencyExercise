@@ -50,7 +50,7 @@ function submitExchangeTransaction (direction, endpoint, successUrl) {
             contentType:"application/json; charset=utf-8",
             url: endpoint + '/' + $("#pesel").text(),
             success: function (response) {
-                alert('Account created: ' + response);
+                alert('Transaction ordered: ' + response);
                 if (successUrl === '') {
                     window.location.reload(true);
                 } else {
@@ -58,7 +58,7 @@ function submitExchangeTransaction (direction, endpoint, successUrl) {
                 }
             },
             error: function (xhr) {
-                alert('Unable to create account: ' + xhr.status);
+                alert('Unable to order transaction: ' + xhr.status);
             }
         });
     }
