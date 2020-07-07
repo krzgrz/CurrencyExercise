@@ -3,6 +3,7 @@ package com.gmail.krzgrz.demo.domain;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class PESEL {
 
-    private static final String pattern = "\\d+";
+    private static final String pattern = "\\d{11}";
 
     /** Date format needed to extract DOB from the PESEL. */
     private static final DateFormat dateFormat = new SimpleDateFormat ("yyMMdd");
@@ -23,6 +24,19 @@ public class PESEL {
         }
         // TODO: check checksum
         this.pesel = pesel;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PESEL pesel1 = (PESEL) o;
+        return pesel.equals(pesel1.pesel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pesel);
     }
 
     public String toString () {

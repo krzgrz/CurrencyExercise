@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExchangeTransactionTest {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     public void testConstructor () {

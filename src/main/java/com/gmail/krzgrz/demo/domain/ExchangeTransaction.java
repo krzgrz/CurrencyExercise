@@ -34,11 +34,9 @@ public class ExchangeTransaction {
     private Currency currencyBought;
     private BigDecimal amountBought;
 
-
     private BigDecimal exchangeRate;
-
-    Date exchangeTimestamp;
-    RateDirection rateDirection;
+    private Date exchangeTimestamp;
+    private RateDirection rateDirection;
 
     /**
      * Creates a new exchange transaction in the <b>ordered</b> state.
@@ -104,6 +102,14 @@ public class ExchangeTransaction {
         this.exchangeRate = exchangeRate;
     }
 
+    public RateDirection getRateDirection () {
+        return rateDirection;
+    }
+
+    public void setRateDirection (RateDirection rateDirection) {
+        this.rateDirection = rateDirection;
+    }
+
     public Date getExchangeTimestamp () {
         // FIXME leaky accessor
         return exchangeTimestamp;
@@ -145,14 +151,6 @@ public class ExchangeTransaction {
         }
         // FIXME leaky accessor
         this.exchangeTimestamp = exchangeTimestamp;
-    }
-
-    public RateDirection getRateDirection () {
-        return rateDirection;
-    }
-
-    public void setRateDirection (RateDirection rateDirection) {
-        this.rateDirection = rateDirection;
     }
 
     public boolean isProperlyOrdered () {

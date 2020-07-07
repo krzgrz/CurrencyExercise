@@ -25,7 +25,7 @@ import com.gmail.krzgrz.demo.domain.AccountRegistration;
  * As the code develops, it would be most likely split into two separate classes.
  */
 @RestController
-public class RegistrationRestController {
+public class ExchangeRestController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
