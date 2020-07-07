@@ -44,6 +44,7 @@ public class ExchangeController {
         }
     };
 
+    /** Presents detailed view of a single account. */
     @GetMapping("/account/{id}")
     public ModelAndView getAccountHistory (@PathVariable String id) {
         ModelAndView mv = new ModelAndView ();
@@ -62,6 +63,7 @@ public class ExchangeController {
         return mv;
     }
 
+    /** List all accounts in the application. */
     @GetMapping("/account")
     public ModelAndView getRegistration () {
         ModelAndView mv = new ModelAndView ();

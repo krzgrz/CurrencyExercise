@@ -2,15 +2,30 @@ package com.gmail.krzgrz.demo.domain;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a complete account for one customer, encompassing the account metadata, history and balances.
  */
 public class Account {
 
-    AccountRegistration accountRegistration;
+    private AccountRegistration accountRegistration;
+
+    private List <ExchangeTransaction> history = new ArrayList ();
+
     private BigDecimal balancePLN;
     private BigDecimal balanceUSD;
+
+    /** Returns metadata for this account. */
+    public AccountRegistration getAccountRegistration () {
+        return accountRegistration;
+    }
+
+    /** Sets metadata for this account. */
+    public void setAccountRegistration (AccountRegistration accountRegistration) {
+        this.accountRegistration = accountRegistration;
+    }
 
     /**
      * Returns current account balance in PLN.

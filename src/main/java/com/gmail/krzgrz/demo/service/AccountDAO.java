@@ -1,9 +1,7 @@
 package com.gmail.krzgrz.demo.service;
 
-import com.gmail.krzgrz.demo.domain.AccountRegistration;
+import com.gmail.krzgrz.demo.domain.*;
 import com.gmail.krzgrz.demo.domain.Currency;
-import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
-import com.gmail.krzgrz.demo.domain.PESEL;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -11,11 +9,12 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class AccountDAO {
 
-    private Map <PESEL, AccountRegistration> accounts = new HashMap ();
+    private Map <PESEL, Account> accounts = new HashMap ();
 
     private Map <PESEL, List <ExchangeTransaction>> histories = new HashMap ();
 
@@ -36,8 +35,11 @@ public class AccountDAO {
      * @return  May be null if not found.
      */
     public AccountRegistration getAccountRegistration (PESEL pesel) {
-        AccountRegistration accountRegistration = accounts.get(pesel);
-        return accountRegistration;
+        Account account = accounts.get(pesel);
+        if (account == null) {
+            return null; // OK, not found.
+        }
+        return account.getAccountRegistration();
     }
 
     /**
@@ -45,16 +47,18 @@ public class AccountDAO {
      * @return  Never null but may be empty.
      */
     public Collection <AccountRegistration> getAllAccountRegistrations () {
-        return accounts.values();
+        return accounts.values().stream().map(Account::getAccountRegistration).collect(Collectors.toList());
     }
 
     public void save (AccountRegistration accountRegistration) {
         PESEL pesel = new PESEL (accountRegistration.getPesel());
         synchronized (accounts) {
             if (accounts.containsKey(pesel)) {
-                throw new RuntimeException("Duplicate");
+                throw new IllegalArgumentException ("Duplicate");
             }
-            accounts.put(pesel, accountRegistration);
+            Account account = new Account ();
+            account.setAccountRegistration(accountRegistration);
+            accounts.put(pesel, account);
             histories.put(pesel, new ArrayList ());
         }
     }
