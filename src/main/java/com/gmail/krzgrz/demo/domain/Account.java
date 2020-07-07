@@ -3,6 +3,7 @@ package com.gmail.krzgrz.demo.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +26,14 @@ public class Account {
     /** Sets metadata for this account. */
     public void setAccountRegistration (AccountRegistration accountRegistration) {
         this.accountRegistration = accountRegistration;
+    }
+
+    public List <ExchangeTransaction> getHistory () {
+        return Collections.unmodifiableList(history);
+    }
+
+    public void addExchangeTransaction (ExchangeTransaction exchangeTransaction) {
+        history.add(exchangeTransaction);
     }
 
     /**
