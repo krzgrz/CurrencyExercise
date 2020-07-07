@@ -24,37 +24,36 @@ public class ExchangeController {
     @Autowired
     AccountDAO accountDAO;
 
+    /** Given {@link ExchangeTransaction}, produces user-facing representation of the exchange rate. */
+    private Function <ExchangeTransaction, String> exchangeRateFormatter = new Function <ExchangeTransaction, String> () {
+        @Override
+        public String apply (ExchangeTransaction exchangeTransaction) {
+            switch (exchangeTransaction.getRateDirection()) {
+                case BOUGHT_VS_SOLD:
+                    return MessageFormat.format("1 {0} = {1} {2}",
+                            exchangeTransaction.getCurrencyBought(),
+                            exchangeTransaction.getExchangeRate(),
+                            exchangeTransaction.getCurrencySold()
+                    );
+                case SOLD_VS_BOUGHT:
+                    return MessageFormat.format("1 {2} = {1} {0}",
+                            exchangeTransaction.getCurrencyBought(),
+                            exchangeTransaction.getExchangeRate(),
+                            exchangeTransaction.getCurrencySold()
+                    );
+            }
+            return "?";
+        }
+    };
+
     @GetMapping("/account/{id}")
     public ModelAndView getAccountHistory (@PathVariable String id) {
         ModelAndView mv = new ModelAndView ();
         mv.setViewName("account");
         // TODO handle null timestamp in a safe way
+        // TODO set timezone
         SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
 //        dateFormat.setTimeZone(TimeZone.getTimeZone(Z));
-
-        Function <ExchangeTransaction, String> exchangeRateFormatter = new Function <ExchangeTransaction, String> () {
-
-            @Override
-            public String apply (ExchangeTransaction exchangeTransaction) {
-                switch (exchangeTransaction.getRateDirection()) {
-                    case BOUGHT_VS_SOLD:
-                        return MessageFormat.format("1 {0} = {1} {2}",
-                            exchangeTransaction.getCurrencyBought(),
-                            exchangeTransaction.getExchangeRate(),
-                            exchangeTransaction.getCurrencySold()
-                        );
-                    case SOLD_VS_BOUGHT:
-                        return MessageFormat.format("1 {2} = {1} {0}",
-                            exchangeTransaction.getCurrencyBought(),
-                            exchangeTransaction.getExchangeRate(),
-                            exchangeTransaction.getCurrencySold()
-                        );
-                }
-                return "?";
-            }
-        };
-
-
         mv.addObject("exchangeRateFormatter", exchangeRateFormatter);
         mv.addObject("dateFormat", dateFormat);
         mv.addObject("currency1", Currency.USD);
@@ -62,6 +61,14 @@ public class ExchangeController {
         mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
         mv.addObject("accountRegistration", accountDAO.get(new PESEL (id)));
         mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));
+        return mv;
+    }
+
+    @GetMapping("/account")
+    public ModelAndView getRegistration () {
+        ModelAndView mv = new ModelAndView ();
+        mv.setViewName("registration");
+//        mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));
         return mv;
     }
 }

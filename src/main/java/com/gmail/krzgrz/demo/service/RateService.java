@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class RateService {
 
     /**
-     * Returns the current exchange rate for given currency pair.
+     * Returns current exchange rate for given currency pair.
      * @param currency1
      * @param currency2
      * @return  Should be interpreted as "1 currency1 = nnn currency2".
