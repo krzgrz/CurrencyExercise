@@ -52,7 +52,7 @@ public class ExchangeController {
     @GetMapping("/account/{id}")
     public ModelAndView getAccountHistory (@PathVariable String id) {
         ModelAndView mv = new ModelAndView ();
-        mv.setViewName("account");
+        mv.setViewName("one-account");
         // TODO handle null timestamp in a safe way
         // TODO set timezone
         SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
@@ -72,7 +72,7 @@ public class ExchangeController {
     public ModelAndView getRegistration () {
         logger.info("getAllAccounts");
         ModelAndView mv = new ModelAndView ();
-        mv.setViewName("registration");
+        mv.setViewName("all-accounts");
         mv.addObject("accountRegistrations", accountDAO.getAllAccountRegistrations());
         return mv;
     }
