@@ -15,8 +15,6 @@ public class AccountDAO {
 
     private Map <PESEL, Account> accounts = new HashMap ();
 
-//    private Map <PESEL, List <ExchangeTransaction>> histories = new HashMap ();
-
     @PostConstruct
     public void start () throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
@@ -31,10 +29,6 @@ public class AccountDAO {
         exchangeTransaction.setExchangeRate(new BigDecimal(1.23));
         exchangeTransaction.setExchangeTimestamp(dateFormat.parse("2020-07-04 13:23:45"));
         account.addExchangeTransaction(exchangeTransaction);
-//        histories.get(new PESEL ("12345678901")).add();
-//        histories.get(new PESEL ("12345678901")).get(0).setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
-//        histories.get(new PESEL ("12345678901")).get(0).setExchangeRate(new BigDecimal(1.23));
-//        histories.get(new PESEL ("12345678901")).get(0).setExchangeTimestamp(dateFormat.parse("2020-07-04 13:23:45"));
     }
 
     /**
