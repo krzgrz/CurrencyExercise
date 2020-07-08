@@ -81,7 +81,12 @@ public class ExchangeRestController {
         return account.getAccountSummary();
     }
 
-
+    /**
+     * TODO: make it PUT /rest-api/account/{pesel}/exchange/{id}
+     * @param pesel
+     * @param exchangeTransaction
+     * @return
+     */
     @PostMapping("/rest-api/account/{pesel}/exchange")
     public ResponseEntity <Void> createExchangeTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {
         if ( ! exchangeTransaction.isProperlyOrdered()) {
