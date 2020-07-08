@@ -87,9 +87,6 @@ public class ExchangeRestController {
         if ( ! exchangeTransaction.isProperlyOrdered()) {
             throw new IllegalArgumentException();
         }
-        // TODO: this code may need generalization if more currencies are to be supported...
-        Currency usd = Currency.getInstance("USD");
-        Currency pln = Currency.getInstance("PLN");
         BigDecimal exchangeRate = null;
         switch (exchangeTransaction.getRateDirection()) {
             case BOUGHT_VS_SOLD:
@@ -101,17 +98,7 @@ public class ExchangeRestController {
             default:
                 throw new IllegalArgumentException();
         }
-//
-//        ExchangeTransaction.RateDirection rateDirection = null;
-//        if ((exchangeTransaction.getCurrencyBought() == usd) && (exchangeTransaction.getCurrencySold() == pln)) {
-//            rateDirection = ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD;
-//        } else if ((exchangeTransaction.getCurrencySold() == usd) && (exchangeTransaction.getCurrencyBought() == pln)) {
-//            rateDirection = ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT;
-//        } else {
-//            throw new IllegalArgumentException ("Unsupported currency pair: " + exchangeTransaction.getCurrencySold() + "/" + exchangeTransaction.getCurrencyBought());
-//        }
         exchangeTransaction.setExchangeRate(exchangeRate);
-//        exchangeTransaction.setRateDirection(rateDirection);
         // Complete exchange transaction...
         exchangeTransaction.setExchangeTimestamp(new Date ());
         //
