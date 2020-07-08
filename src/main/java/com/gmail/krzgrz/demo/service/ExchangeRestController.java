@@ -42,15 +42,13 @@ public class ExchangeRestController {
         this.rateService = rateService;
     }
 
-    @GetMapping("/rest-api/registration/{pesel}")
+    @GetMapping("/rest-api/account/{pesel}/registration")
     public AccountRegistration getAccount (@PathVariable String pesel) {
-        // TODO: verify that id looks like a PESEL, ie. 11 digits and maybe checksum as well
-        // in order to differentiate "invalid argument" from "not found".
         AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (pesel));
         return accountRegistration;
     }
 
-    @GetMapping("/rest-api/registration")
+    @GetMapping("/rest-api/account/registration")
     public Collection <AccountRegistration> getAllAccounts () {
         return accountDAO.getAllAccountRegistrations();
     }
@@ -60,7 +58,7 @@ public class ExchangeRestController {
      * @param accountRegistration
      * @return
      */
-    @PostMapping("/rest-api/registration")
+    @PostMapping("/rest-api/account/registration")
     public ResponseEntity <Void> createAccount (@RequestBody AccountRegistration accountRegistration) {
         logger.info("Post: " + accountRegistration);
         logger.info("Post: " + accountRegistration.getInitialBalancePLN());

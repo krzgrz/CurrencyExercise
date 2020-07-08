@@ -4,7 +4,7 @@
 
     </head>
     <body>
-        <a th:href="@{/rest-api/registration}">REST</a>
+        <a th:href="@{/rest-api/account/registration}">REST</a>
         <content tag="javascript">
             <script type="text/javascript" src="/jquery-2.2.0.min.js"></script>
             <script type="text/javascript" src="/jquery-ui.min.js"></script>
@@ -28,7 +28,7 @@
                     <td th:text="${ar.getLastName()}"/>
                     <td th:text="${ar.getInitialBalancePLN()}"/>
                     <td><a th:href="@{/account/{pesel}(pesel=${ar.getPesel()})}">WEB</a></td>
-                    <td><a th:href="@{/rest-api/registration/{pesel}(pesel=${ar.getPesel()})}">REST</a></td>
+                    <td><a th:href="@{/rest-api/account/{pesel}/registration(pesel=${ar.getPesel()})}">REST</a></td>
                 </tr>
             </tbody>
             <form id="registrationForm" method="POST" action="/registration">
@@ -39,7 +39,7 @@
                     <td><input name="lastName"/></td>
                     <td><input name="initialBalancePLN"/></td>
                     <td>
-                        <button type="button" onclick="submitRegistration('/rest-api/registration','/account')">Create</button>
+                        <button type="button" onclick="submitRegistration('/rest-api/account/registration','/account')">Create</button>
                     </td>
                 </tr>
             </tfoot>
