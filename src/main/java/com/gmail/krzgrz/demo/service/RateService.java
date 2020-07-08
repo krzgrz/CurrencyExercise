@@ -26,25 +26,28 @@ public class RateService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private RateReport rateReport;
+
     @PostConstruct
     public void start () throws JsonProcessingException {
         // TODO: make it asynchronous and fail-safe...
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity <RateResponse> response = restTemplate.getForEntity("https://api.nbp.pl/api/exchangerates/rates/A/USD?format=json", RateResponse.class);
         if (response.getStatusCode().is2xxSuccessful()) {
-//            String map = response.getBody();
-//            logger.info("rateReport=" + map);
-            ObjectMapper objectMapper = new ObjectMapper();
-            RateReport rr = objectMapper.readValue("{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}", RateReport.class);
-            logger.info("rr=" + rr);
-            RateResponse rr2 = objectMapper.readValue("{\"rates\":[{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}]}", RateResponse.class);
-            logger.info("rr2=" + rr2);
-            logger.info("rr2=" + rr2.rates.size());
-            logger.info("rr2=" + rr2.rates.get(0));
+////            String map = response.getBody();
+////            logger.info("rateReport=" + map);
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            RateReport rr = objectMapper.readValue("{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}", RateReport.class);
+//            logger.info("rr=" + rr);
+//            RateResponse rr2 = objectMapper.readValue("{\"rates\":[{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}]}", RateResponse.class);
+//            logger.info("rr2=" + rr2);
+//            logger.info("rr2=" + rr2.rates.size());
+//            logger.info("rr2=" + rr2.rates.get(0));
             RateResponse rr3 = response.getBody();//objectMapper.readValue(map, RateResponse.class);
             logger.info("rr3=" + rr3);
             logger.info("rr3=" + rr3.rates.size());
             logger.info("rr3=" + rr3.rates.get(0));
+            rateReport = rr3.rates.get(0);
 //            logger.info("rateReport=" + map.get("rates"));
 //            logger.info("rateReport=" + map.get("rates").getClass());
 //            logger.info("rateReport=" + ((List)map.get("rates")).get(0).getClass());
@@ -60,6 +63,14 @@ public class RateService {
      * @return  Should be interpreted as "1 currency1 = nnn currency2".
      */
     public BigDecimal getExchangeRate (Currency currency1, Currency currency2) {
-        return new BigDecimal (1.23);
+        BigDecimal rate = rateReport.getMid();
+        if ((currency1 == Currency.getInstance("USD")) && (currency2 == Currency.getInstance("PLN"))) {
+            return rate;
+        } else if ((currency1 == Currency.getInstance("PLN")) && (currency2 == Currency.getInstance("USD"))) {
+            // TODO: figure out business rules on precision
+            return BigDecimal.ONE.divide(rate);
+        } else {
+            throw new IllegalArgumentException ();
+        }
     }
 }
