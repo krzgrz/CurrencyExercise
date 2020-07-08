@@ -21,8 +21,8 @@ public class AccountRegistration {
     public AccountRegistration (){
     }
 
-    public AccountRegistration (String pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
-        this.pesel = new PESEL (pesel);
+    public AccountRegistration (PESEL pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
+        this.pesel = pesel;
         this.firstName = firstName;
         this.lastName = lastName;
         this.initialBalancePLN = initialBalancePLN;

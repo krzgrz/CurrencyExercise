@@ -21,8 +21,8 @@ public class AccountDAO {
     @PostConstruct
     public void start () throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-        save(new AccountRegistration ("12345678901", "Adam", "Mickiewicz", new BigDecimal (123)));
-        AccountRegistration accountRegistration = new AccountRegistration ("11122233344", "Adam", "Asnyk", new BigDecimal (123));
+        save(new AccountRegistration (new PESEL ("12345678901"), "Adam", "Mickiewicz", new BigDecimal (123)));
+        AccountRegistration accountRegistration = new AccountRegistration (new PESEL ("11122233344"), "Adam", "Asnyk", new BigDecimal (123));
         save(accountRegistration);
 
         Account account = accounts.get(accountRegistration.getPesel());

@@ -59,7 +59,8 @@ public class PESEL {
             if ((month - i * 20 >= 1) && (month - i * 20 <= 12)) {
                 Calendar calendar = GregorianCalendar.getInstance();
                 calendar.setTimeZone(timeZone);
-                calendar.set(centuries[i] + year, month - i * 20 - 1, day, 0, 0);
+                calendar.set(centuries[i] + year, month - i * 20 - 1, day, 0, 0, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
                 return new Date (calendar.getTimeInMillis());
             }
         }

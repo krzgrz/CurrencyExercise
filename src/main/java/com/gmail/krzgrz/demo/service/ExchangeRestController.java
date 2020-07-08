@@ -1,8 +1,7 @@
 package com.gmail.krzgrz.demo.service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
@@ -57,10 +56,12 @@ public class ExchangeRestController {
      */
     @PostMapping("/rest-api/registration")
     public ResponseEntity <Void> createAccount (@RequestBody AccountRegistration accountRegistration) {
-        // TODO Check DOB in the correct timezone
         logger.info("Post: " + accountRegistration);
         if (accountDAO.getAccountRegistration(accountRegistration.getPesel()) != null) {
             throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "Account already exists.");
+        }
+        if ( ! isAgeEligible(accountRegistration, new Date ())) {
+            throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "Ineligible age.");
         }
         accountDAO.save(accountRegistration);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
@@ -89,6 +90,26 @@ public class ExchangeRestController {
         AccountRegistration accountRegistration = accountDAO.getAccountRegistration(new PESEL (pesel));
         accountDAO.save(accountRegistration, exchangeTransaction);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
+    }
+
+    /**
+     * Checks whether the customer specified in given {@link AccountRegistration} is of an appropriate age to open an account.
+     * @param now  the current time; parameterized for testability
+     * @return  {@code true} if OK to open.
+     */
+    protected boolean isAgeEligible (AccountRegistration accountRegistration, Date now) {
+        Date dob = accountRegistration.getPesel().getDateOfBirth();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
+        calendar.setTime(now);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.YEAR, -18);
+        Date cutoff = calendar.getTime();
+        // Assuming you may open an account on your 18th birthday...
+        return dob.compareTo(cutoff) <= 0;
     }
 
 }
