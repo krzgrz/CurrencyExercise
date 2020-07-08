@@ -2,8 +2,7 @@ package com.gmail.krzgrz.demo.domain;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -44,6 +43,19 @@ public class PESEL {
     }
 
     public Date getDateOfBirth () {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        String date = pesel.substring(0, 6);
+        Integer year = Integer.parseInt(pesel.substring(0, 2));
+        Integer month = Integer.parseInt(pesel.substring(2, 4));
+        Integer day = Integer.parseInt(pesel.substring(4, 6));
+        Integer [] centuries = {1900, 2000, 2100, 2200, 1800};
+        for (int i = 0; i < centuries.length; i++) {
+            if ((month - i * 20 >= 1) && (month - i * 20 <= 12)) {
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
+                calendar.set(centuries[i] + year, month - i * 20 - 1, day, 0, 0);
+                return new Date (calendar.getTimeInMillis());
+            }
+        }
+        throw new IllegalArgumentException ();
     }
 }

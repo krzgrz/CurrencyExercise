@@ -56,7 +56,7 @@ public class ExchangeRestController {
      */
     @PostMapping("/registration")
     public ResponseEntity <Void> createAccount (@RequestBody AccountRegistration accountRegistration) {
-        // Check DOB in the correct timezone
+        // TODO Check DOB in the correct timezone
         logger.info("Post: " + accountRegistration);
         logger.info("Post: " + accountDAO);
         accountDAO.save(accountRegistration);
