@@ -54,8 +54,9 @@
             <tfoot>
             <tr>
                 <td>
-                    <button type="button" onclick="submitExchangeTransaction('right', '/rest-api/exchange', '');">USD->PLN</button>
-                    <button type="button" onclick="submitExchangeTransaction('left', '/rest-api/exchange', '');">USD<-PLN</button>
+<!--                    @{/rest-api/account/{pesel}/registration(pesel=${ar.getPesel()})}-->
+                    <button id="btRight" type="button" th:data-endpoint="@{/rest-api/account/{pesel}/exchange(pesel=${accountRegistration.getPesel()})}" onclick="submitExchangeTransaction('right', '');">USD->PLN</button>
+                    <button id="btLeft" type="button" th:data-endpoint="@{/rest-api/account/{pesel}/exchange(pesel=${accountRegistration.getPesel()})}" onclick="submitExchangeTransaction('left', '');">USD<-PLN</button>
                 </td>
                 <td><input id="amount1"/></td>
                 <td><input id="amount2"/></td>

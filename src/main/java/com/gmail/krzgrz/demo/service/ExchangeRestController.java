@@ -82,7 +82,7 @@ public class ExchangeRestController {
     }
 
 
-    @PostMapping("/rest-api/exchange/{pesel}")
+    @PostMapping("/rest-api/account/{pesel}/exchange")
     public ResponseEntity <Void> createExchangeTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {
         if ( ! exchangeTransaction.isProperlyOrdered()) {
             throw new IllegalArgumentException();

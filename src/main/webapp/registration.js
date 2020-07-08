@@ -26,10 +26,11 @@ function submitRegistration (endpoint, successUrl) {
     }
 }
 
-function submitExchangeTransaction (direction, endpoint, successUrl) {
+function submitExchangeTransaction (direction, successUrl) {
     if (confirm('Order transaction?'/* + endpoint*/)) {
         formData = {}
         if (direction === 'right') {
+            endpoint = $("#btRight").attr("data-endpoint");
             formData['currencySold'] = 'USD';
             formData['currencyBought'] = 'PLN';
             if ($("#amount1").val()) {
@@ -39,6 +40,7 @@ function submitExchangeTransaction (direction, endpoint, successUrl) {
                 formData['amountBought'] = Math.abs($("#amount2").val());
             }
         } else if (direction === 'left') {
+            endpoint = $("#btLeft").attr("data-endpoint");
             formData['currencySold'] = 'PLN';
             formData['currencyBought'] = 'USD';
             if ($("#amount2").val()) {
@@ -56,7 +58,7 @@ function submitExchangeTransaction (direction, endpoint, successUrl) {
             data: JSON.stringify(formData),
 //            dataType:"json",
             contentType:"application/json; charset=utf-8",
-            url: endpoint + '/' + $("#pesel").text(),
+            url: endpoint,
             success: function (response) {
                 alert('Transaction ordered: ' + response);
                 if (successUrl === '') {
