@@ -1,6 +1,5 @@
 package com.gmail.krzgrz.demo.service;
 
-import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
 import com.gmail.krzgrz.demo.domain.PESEL;
 import org.slf4j.Logger;
@@ -13,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.function.Function;
 
 /**
@@ -59,8 +59,8 @@ public class ExchangeController {
 //        dateFormat.setTimeZone(TimeZone.getTimeZone(Z));
         mv.addObject("exchangeRateFormatter", exchangeRateFormatter);
         mv.addObject("dateFormat", dateFormat);
-        mv.addObject("currency1", Currency.USD);
-        mv.addObject("currency2", Currency.PLN);
+        mv.addObject("currency1", Currency.getInstance("USD"));
+        mv.addObject("currency2", Currency.getInstance("PLN"));
         mv.addObject("accountRegistration", accountDAO.getAccountRegistration(new PESEL (id)));
         mv.addObject("accountRegistration", accountDAO.getAccountRegistration(new PESEL (id)));
         mv.addObject("accountHistory", accountDAO.getAccountHistory(new PESEL (id)));

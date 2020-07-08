@@ -4,6 +4,7 @@ import javax.print.attribute.standard.MediaSizeName;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Currency;
 import java.util.Date;
 
 /**

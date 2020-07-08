@@ -1,9 +1,9 @@
 package com.gmail.krzgrz.demo.service;
 
-import com.gmail.krzgrz.demo.domain.Currency;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 
 @Component
 public class RateService {

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,16 +14,19 @@ class ExchangeTransactionTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private Currency usd = Currency.getInstance("USD");
+    private Currency pln = Currency.getInstance("PLN");
+
     @Test
     public void testConstructor () {
         logger.info("testConstructor");
-        ExchangeTransaction uut = new ExchangeTransaction (Currency.PLN, new BigDecimal (3), Currency.USD, null);
+        ExchangeTransaction uut = new ExchangeTransaction (pln, new BigDecimal (3), usd, null);
     }
 
     @Test
     public void testSellPLN2USD () {
         logger.info("testSellPLN2USD");
-        ExchangeTransaction uut = new ExchangeTransaction (Currency.PLN, new BigDecimal (3.0), Currency.USD, null);
+        ExchangeTransaction uut = new ExchangeTransaction (pln, new BigDecimal (3.0), usd, null);
         uut.setExchangeRate(new BigDecimal (4));
         uut.setRateDirection(ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD);
         //
@@ -39,7 +43,7 @@ class ExchangeTransactionTest {
     @Test
     public void testBuyPLN2USD () {
         logger.info("testBuyPLN2USD");
-        ExchangeTransaction uut = new ExchangeTransaction (Currency.PLN, null, Currency.USD, new BigDecimal (0.75));
+        ExchangeTransaction uut = new ExchangeTransaction (pln, null, usd, new BigDecimal (0.75));
         uut.setExchangeRate(new BigDecimal (4));
         uut.setRateDirection(ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD);
         //
@@ -56,7 +60,7 @@ class ExchangeTransactionTest {
     @Test
     public void testSellUSD2PLN () {
         logger.info("testSellUSD2PLN");
-        ExchangeTransaction uut = new ExchangeTransaction (Currency.USD, new BigDecimal (3.0), Currency.PLN, null);
+        ExchangeTransaction uut = new ExchangeTransaction (usd, new BigDecimal (3.0), pln, null);
         uut.setExchangeRate(new BigDecimal (4));
         uut.setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
         //
@@ -73,7 +77,7 @@ class ExchangeTransactionTest {
     @Test
     public void testBuyUSD2PLN () {
         logger.info("testBuyUSD2PLN");
-        ExchangeTransaction uut = new ExchangeTransaction (Currency.USD, null, Currency.PLN, new BigDecimal (12));
+        ExchangeTransaction uut = new ExchangeTransaction (usd, null, pln, new BigDecimal (12));
         uut.setExchangeRate(new BigDecimal (4));
         uut.setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
         //

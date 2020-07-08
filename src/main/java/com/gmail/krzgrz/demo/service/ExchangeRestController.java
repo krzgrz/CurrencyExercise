@@ -3,7 +3,6 @@ package com.gmail.krzgrz.demo.service;
 import java.math.BigDecimal;
 import java.util.*;
 
-import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
 import com.gmail.krzgrz.demo.domain.PESEL;
 import org.slf4j.Logger;
@@ -75,11 +74,13 @@ public class ExchangeRestController {
             throw new IllegalArgumentException();
         }
         // TODO: this code may need generalization if more currencies are to be supported...
-        BigDecimal exchangeRate = rateService.getExchangeRate(Currency.USD, Currency.PLN);
+        Currency usd = Currency.getInstance("USD");
+        Currency pln = Currency.getInstance("PLN");
+        BigDecimal exchangeRate = rateService.getExchangeRate(usd, pln);
         ExchangeTransaction.RateDirection rateDirection = null;
-        if ((exchangeTransaction.getCurrencyBought() == Currency.USD) && (exchangeTransaction.getCurrencySold() == Currency.PLN)) {
+        if ((exchangeTransaction.getCurrencyBought() == usd) && (exchangeTransaction.getCurrencySold() == pln)) {
             rateDirection = ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD;
-        } else if ((exchangeTransaction.getCurrencySold() == Currency.USD) && (exchangeTransaction.getCurrencyBought() == Currency.PLN)) {
+        } else if ((exchangeTransaction.getCurrencySold() == usd) && (exchangeTransaction.getCurrencyBought() == pln)) {
             rateDirection = ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT;
         } else {
             throw new IllegalArgumentException ("Unsupported currency pair: " + exchangeTransaction.getCurrencySold() + "/" + exchangeTransaction.getCurrencyBought());
