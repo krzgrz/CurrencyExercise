@@ -40,15 +40,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr th:if="${accountHistory.isEmpty()}">
                     <td colspan="4">No data</td>
                 </tr>
-            <tr>
-                <td>x</td>
-                <td>y</td>
-                <td>x</td>
-                <td>z</td>
-            </tr>
             <tr th:each="exchangeTransaction: ${accountHistory}">
                 <td th:text="${dateFormat.format(exchangeTransaction.getExchangeTimestamp())}"/>
                 <td th:text="${exchangeTransaction.getSignedAmount(currency1)}"/>
