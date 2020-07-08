@@ -32,17 +32,18 @@ public class ExchangeController {
 
     /** Given {@link ExchangeTransaction}, produces user-facing representation of the exchange rate. */
     private Function <ExchangeTransaction, String> exchangeRateFormatter = new Function <ExchangeTransaction, String> () {
+
         @Override
         public String apply (ExchangeTransaction exchangeTransaction) {
             switch (exchangeTransaction.getRateDirection()) {
                 case BOUGHT_VS_SOLD:
-                    return MessageFormat.format("1 {0} = {1} {2}",
+                    return MessageFormat.format("1 {0} = {1,number,#0.0000} {2}",
                             exchangeTransaction.getCurrencyBought(),
                             exchangeTransaction.getExchangeRate(),
                             exchangeTransaction.getCurrencySold()
                     );
                 case SOLD_VS_BOUGHT:
-                    return MessageFormat.format("1 {2} = {1} {0}",
+                    return MessageFormat.format("1 {2} = {1,number,#0.0000} {0}",
                             exchangeTransaction.getCurrencyBought(),
                             exchangeTransaction.getExchangeRate(),
                             exchangeTransaction.getCurrencySold()
