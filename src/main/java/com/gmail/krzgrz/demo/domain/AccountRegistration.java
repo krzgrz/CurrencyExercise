@@ -1,7 +1,9 @@
 package com.gmail.krzgrz.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -26,7 +28,11 @@ public class AccountRegistration {
     public AccountRegistration (){
     }
 
+    @JsonCreator
     public AccountRegistration (PESEL pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
+        if ((pesel == null) || (firstName == null) || (lastName == null) || (initialBalancePLN == null)) {
+            throw new IllegalArgumentException ();
+        }
         this.pesel = pesel;
         this.firstName = firstName;
         this.lastName = lastName;
