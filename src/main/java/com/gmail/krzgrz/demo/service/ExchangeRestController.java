@@ -30,11 +30,19 @@ public class ExchangeRestController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    AccountDAO accountDAO;
+    private AccountDAO accountDAO;
+
+    private RateService rateService;
 
     @Autowired
-    RateService rateService;
+    public void setAccountDAO (AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
+    @Autowired
+    public void setRateService (RateService rateService) {
+        this.rateService = rateService;
+    }
 
     @GetMapping("/rest-api/registration/{pesel}")
     public AccountRegistration getAccount (@PathVariable String pesel) {

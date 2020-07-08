@@ -34,25 +34,11 @@ public class RateService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity <RateResponse> response = restTemplate.getForEntity("https://api.nbp.pl/api/exchangerates/rates/A/USD?format=json", RateResponse.class);
         if (response.getStatusCode().is2xxSuccessful()) {
-////            String map = response.getBody();
-////            logger.info("rateReport=" + map);
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            RateReport rr = objectMapper.readValue("{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}", RateReport.class);
-//            logger.info("rr=" + rr);
-//            RateResponse rr2 = objectMapper.readValue("{\"rates\":[{\"no\":\"a\", \"effectiveDate\":\"b\", \"mid\": \"c\"}]}", RateResponse.class);
-//            logger.info("rr2=" + rr2);
-//            logger.info("rr2=" + rr2.rates.size());
-//            logger.info("rr2=" + rr2.rates.get(0));
             RateResponse rr3 = response.getBody();//objectMapper.readValue(map, RateResponse.class);
             logger.info("rr3=" + rr3);
             logger.info("rr3=" + rr3.rates.size());
             logger.info("rr3=" + rr3.rates.get(0));
             rateReport = rr3.rates.get(0);
-//            logger.info("rateReport=" + map.get("rates"));
-//            logger.info("rateReport=" + map.get("rates").getClass());
-//            logger.info("rateReport=" + ((List)map.get("rates")).get(0).getClass());
-//            logger.info("rateReport=" + ((List)map.get("rates")).get(0));
-//            logger.info("rateReport=" + map.rates);
         };
     }
 

@@ -23,8 +23,12 @@ public class ExchangeController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private AccountDAO accountDAO;
+
     @Autowired
-    AccountDAO accountDAO;
+    public void setAccountDAO (AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
 
     /** Given {@link ExchangeTransaction}, produces user-facing representation of the exchange rate. */
     private Function <ExchangeTransaction, String> exchangeRateFormatter = new Function <ExchangeTransaction, String> () {

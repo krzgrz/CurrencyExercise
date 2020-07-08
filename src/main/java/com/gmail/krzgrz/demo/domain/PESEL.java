@@ -2,17 +2,14 @@ package com.gmail.krzgrz.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * Wraps a string representation of a PESEL to provide some basic validation and parsing.
  */
 public class PESEL {
 
-    private static final String pattern = "\\d{11}";
+    private static final String PESEL_PATTERN = "\\d{11}";
 
     /** Timezone for extracting DOB from the PESEL. */
     public static final TimeZone timeZone = TimeZone.getTimeZone("Europe/Warsaw");
@@ -21,7 +18,7 @@ public class PESEL {
     private String pesel;
 
     public PESEL (String pesel) {
-        if ( ! pesel.matches(pattern)) {
+        if ( ! pesel.matches(PESEL_PATTERN)) {
             throw new IllegalArgumentException ("PESEL must consist of 11 digits.");
         }
         // TODO: check checksum
