@@ -32,13 +32,21 @@ function submitExchangeTransaction (direction, endpoint, successUrl) {
         if (direction === 'right') {
             formData['currencySold'] = 'USD';
             formData['currencyBought'] = 'PLN';
-            formData['amountSold'] = $("#amount1").val();
-            formData['amountBought'] = $("#amount2").val();
+            if ($("#amount1").val()) {
+                formData['amountSold'] = Math.abs($("#amount1").val());
+            }
+            if ($("#amount2").val()) {
+                formData['amountBought'] = Math.abs($("#amount2").val());
+            }
         } else if (direction === 'left') {
             formData['currencySold'] = 'PLN';
             formData['currencyBought'] = 'USD';
-            formData['amountSold'] = $("#amount2").val();
-            formData['amountBought'] = $("#amount1").val();
+            if ($("#amount2").val()) {
+                formData['amountSold'] = Math.abs($("#amount2").val());
+            }
+            if ($("#amount1").val()) {
+                formData['amountBought'] = Math.abs($("#amount1").val());
+            }
         }
 //        $.each($("#registrationForm").serializeArray(), function (i,v) {
 //            formData[v.name] = v.value;
