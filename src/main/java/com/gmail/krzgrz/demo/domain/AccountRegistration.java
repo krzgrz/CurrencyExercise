@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  */
 public class AccountRegistration {
 
-    private String pesel;
+    private PESEL pesel;
     private String firstName;
     private String lastName;
 
@@ -21,15 +21,15 @@ public class AccountRegistration {
     public AccountRegistration (){
     }
 
-    public AccountRegistration(String pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
-        this.pesel = pesel;
+    public AccountRegistration (String pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
+        this.pesel = new PESEL (pesel);
         this.firstName = firstName;
         this.lastName = lastName;
         this.initialBalancePLN = initialBalancePLN;
     }
 
     public PESEL getPesel() {
-        return new PESEL (pesel);
+        return pesel;
     }
 
     public String getFirstName() {

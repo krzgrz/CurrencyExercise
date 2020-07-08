@@ -1,5 +1,7 @@
 package com.gmail.krzgrz.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -15,6 +17,7 @@ public class PESEL {
     /** Timezone for extracting DOB from the PESEL. */
     public static final TimeZone timeZone = TimeZone.getTimeZone("Europe/Warsaw");
 
+    @JsonValue
     private String pesel;
 
     public PESEL (String pesel) {
