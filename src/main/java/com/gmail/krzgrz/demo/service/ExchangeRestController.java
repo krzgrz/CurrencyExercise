@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * Provides REST API for our two services: account registration and exchange transactions.
  * As the code develops, it would be most likely split into two separate classes.
+ * TODO: error handling
  */
 @RestController
 public class ExchangeRestController {
@@ -57,6 +58,7 @@ public class ExchangeRestController {
     @PostMapping("/rest-api/registration")
     public ResponseEntity <Void> createAccount (@RequestBody AccountRegistration accountRegistration) {
         logger.info("Post: " + accountRegistration);
+        logger.info("Post: " + accountRegistration.getInitialBalancePLN());
         if (accountDAO.getAccountRegistration(accountRegistration.getPesel()) != null) {
             throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "Account already exists.");
         }

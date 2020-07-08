@@ -1,5 +1,8 @@
 package com.gmail.krzgrz.demo.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 /**
@@ -7,6 +10,8 @@ import java.math.BigDecimal;
  * @author kgrzeda
  */
 public class AccountRegistration {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private PESEL pesel;
     private String firstName;
