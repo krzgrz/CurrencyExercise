@@ -168,7 +168,11 @@ public class ExchangeTransaction {
         return true;
     }
 
-
+    /**
+     * Returns amount of given currency involved in this transaction; positive if bought, negative if sold.
+     * @param currency
+     * @return
+     */
     public BigDecimal getSignedAmount (Currency currency) {
         if (currency == currencySold) {
             return amountSold != null ? amountSold.negate() : null;

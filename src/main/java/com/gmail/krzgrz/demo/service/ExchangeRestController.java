@@ -3,8 +3,7 @@ package com.gmail.krzgrz.demo.service;
 import java.math.BigDecimal;
 import java.util.*;
 
-import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
-import com.gmail.krzgrz.demo.domain.PESEL;
+import com.gmail.krzgrz.demo.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gmail.krzgrz.demo.domain.AccountRegistration;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -75,6 +73,16 @@ public class ExchangeRestController {
         accountDAO.save(accountRegistration);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }
+
+    @GetMapping("/rest-api/account/{pesel}/summary")
+    public AccountSummary getAccountSummary (@PathVariable String pesel) {
+        Account account = accountDAO.getAccount(new PESEL (pesel));
+        if (account == null) {
+            throw new ResponseStatusException (HttpStatus.NOT_FOUND);
+        }
+        return account.getAccountSummary();
+    }
+
 
     @PostMapping("/rest-api/exchange/{pesel}")
     public ResponseEntity <Void> orderTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {

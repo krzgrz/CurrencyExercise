@@ -2,9 +2,7 @@ package com.gmail.krzgrz.demo.domain;
 
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a complete account for one customer, encompassing the account metadata, history and balances.
@@ -14,9 +12,6 @@ public class Account {
     private AccountRegistration accountRegistration;
 
     private List <ExchangeTransaction> history = new ArrayList ();
-
-    private BigDecimal balancePLN;
-    private BigDecimal balanceUSD;
 
     /** Returns metadata for this account. */
     public AccountRegistration getAccountRegistration () {
@@ -36,27 +31,22 @@ public class Account {
         history.add(exchangeTransaction);
     }
 
-    /**
-     * Returns current account balance in PLN.
-     * @return  Never null but may be 0.
-     */
-    public BigDecimal getBalancePLN () {
-        return balancePLN;
-    };
-
-    public void setBalancePLN (BigDecimal balancePLN) {
-        this.balancePLN = balancePLN;
-    };
-
-    /**
-     * Returns current account balance in USD.
-     * @return  Never null but may be 0.
-     */
-    public BigDecimal getBalanceUSD () {
-        return balanceUSD;
-    }
-
-    public void setBalanceUSD (BigDecimal balanceUSD) {
-        this.balanceUSD = balanceUSD;
+    public AccountSummary getAccountSummary () {
+        Map <Currency, BigDecimal> balances = new HashMap ();
+        Currency pln = Currency.getInstance("PLN");
+        Currency usd = Currency.getInstance("USD");
+        balances.put(pln, new BigDecimal (0));
+        balances.put(usd, new BigDecimal (0));
+        for (ExchangeTransaction et : history) {
+            balances.put(pln, balances.get(pln).add(et.getSignedAmount(pln)));
+            balances.put(usd, balances.get(usd).add(et.getSignedAmount(usd)));
+        }
+        return new AccountSummary (
+            accountRegistration.getPesel(),
+            accountRegistration.getFirstName(),
+            accountRegistration.getLastName(),
+            balances.get(pln),
+            balances.get(usd)
+        );
     }
 }

@@ -12,6 +12,7 @@
             <script type="text/javascript" src="/registration.js"></script>
         </content>
 
+        <a th:href="@{/rest-api/account/{pesel}/summary(pesel=${accountRegistration.getPesel()})}">REST summary</a></td>
     <table>
         <tbody>
             <tr>

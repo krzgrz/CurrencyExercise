@@ -32,6 +32,17 @@ public class AccountDAO {
     }
 
     /**
+     * Returns the entire account for given PESEL.
+     * This method may be heavy as it fetches all the history.
+     * @param pesel
+     * @return  May be null if not found.
+     */
+    public Account getAccount (PESEL pesel) {
+        Account account = accounts.get(pesel);
+        return account;
+    }
+
+    /**
      * Returns account metadata for given PESEL.
      * @param pesel
      * @return  May be null if not found.
