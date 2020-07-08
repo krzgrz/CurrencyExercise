@@ -6,6 +6,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Currency;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * An instance of this class represents one transaction of exchanging one currency for another.
@@ -17,9 +18,8 @@ import java.util.Date;
  * of two distinct currencies (one being sold, the other being bought) and exactly one positive amount expressed
  * in either currency. The amount expressed in the other currency must be omitted at this stage.
  * </p><p>
- * An ordered {@link ExchangeTransaction} is then amended with exchange rate ({@link #setExchangeRate(BigDecimal)}
- * and {@link #getRateDirection()}) necessary for its execution. Once amended, the exchange transaction
- * becomes "ready".
+ * An ordered {@link ExchangeTransaction} is then amended with exchange rate ({@link #setExchangeRate(BigDecimal)})
+ * necessary for its execution. Once amended, the exchange transaction becomes "ready".
  * </p><p>
  * Finally, the transaction becomes completed with a call to {@link #setExchangeTimestamp(Date)}.
  * That call also calculates one of the amounts, which was omitted during creation.
@@ -31,9 +31,9 @@ public class ExchangeTransaction {
     private static final int SCALE = 2;
 
     private Currency currencySold;
-    private BigDecimal amountSold;
+    private Optional <BigDecimal> amountSold;
     private Currency currencyBought;
-    private BigDecimal amountBought;
+    private Optional <BigDecimal> amountBought;
 
     private BigDecimal exchangeRate;
     private Date exchangeTimestamp;
@@ -47,17 +47,24 @@ public class ExchangeTransaction {
      * @param amountBought  Positive or null. Should be given if and only if "amountSold" is omitted.
      */
     public ExchangeTransaction (Currency currencySold, BigDecimal amountSold, Currency currencyBought, BigDecimal amountBought) {
-        this.currencySold = currencySold;
-        this.currencyBought = currencyBought;
-        this.amountSold = amountSold != null ? amountSold.setScale(SCALE, BigDecimal.ROUND_HALF_UP) : null;
-        this.amountBought = amountBought != null ? amountBought.setScale(SCALE, BigDecimal.ROUND_HALF_UP) : null;
         if ((amountSold != null) && (amountBought == null)) {
             this.rateDirection = RateDirection.SOLD_VS_BOUGHT;
         } else if ((amountSold == null) && (amountBought != null)) {
             this.rateDirection = RateDirection.BOUGHT_VS_SOLD;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Exactly one amount must be given.");
         }
+        //
+        this.currencySold = currencySold;
+        this.currencyBought = currencyBought;
+        this.amountSold = Optional.ofNullable(amountSold).map((BigDecimal amount) -> amount.setScale(SCALE, BigDecimal.ROUND_HALF_UP));
+        this.amountBought = Optional.ofNullable(amountBought).map((BigDecimal amount) -> amount.setScale(SCALE, BigDecimal.ROUND_HALF_UP));
+        this.amountSold.ifPresent((BigDecimal amount) -> {
+            if (amount.signum() <= 0) throw new IllegalArgumentException("If amount sold is given, it must be positive.");
+        });
+        this.amountBought.ifPresent((BigDecimal amount) -> {
+            if (amount.signum() <= 0) throw new IllegalArgumentException("If amount bought is given, it must be positive.");
+        });
     }
 
     /**
@@ -72,7 +79,7 @@ public class ExchangeTransaction {
      * Returns the amount of {@link #getCurrencySold()} being sold in this transaction.
      * Should be positive.
      */
-    public BigDecimal getAmountSold () {
+    public Optional <BigDecimal> getAmountSold () {
         return amountSold;
     }
 
@@ -88,7 +95,7 @@ public class ExchangeTransaction {
      * Returns the amount of {@link #getCurrencyBought()} being bought in this transaction.
      * Should be positive.
      */
-    public BigDecimal getAmountBought () {
+    public Optional <BigDecimal> getAmountBought () {
         return amountBought;
     }
 
@@ -114,10 +121,6 @@ public class ExchangeTransaction {
         return rateDirection;
     }
 
-//    public void setRateDirection (RateDirection rateDirection) {
-//        this.rateDirection = rateDirection;
-//    }
-
     public Date getExchangeTimestamp () {
         // FIXME leaky accessor
         return exchangeTimestamp;
@@ -130,30 +133,10 @@ public class ExchangeTransaction {
         if ((rateDirection == null) || (exchangeRate == null)) {
             throw new IllegalStateException ();
         }
-        if ((amountSold == null) && (amountBought != null)) {
-            switch (rateDirection) {
-                case BOUGHT_VS_SOLD:
-                    amountSold = amountBought.multiply(exchangeRate);
-                    break;
-                case SOLD_VS_BOUGHT:
-                    amountSold = amountBought.multiply(exchangeRate);
-                    break;
-                default:
-                    throw new IllegalArgumentException ();
-            }
-            amountSold = amountSold.setScale(SCALE, BigDecimal.ROUND_HALF_UP);
-        } else if ((amountBought == null) && (amountSold != null)) {
-            switch (rateDirection) {
-                case SOLD_VS_BOUGHT:
-                    amountBought = amountSold.multiply(exchangeRate);
-                    break;
-                case BOUGHT_VS_SOLD:
-                    amountBought = amountSold.multiply(exchangeRate);
-                    break;
-                default:
-                    throw new IllegalArgumentException ();
-            }
-            amountBought = amountBought.setScale(SCALE, BigDecimal.ROUND_HALF_UP);
+        if (( ! amountSold.isPresent()) && amountBought.isPresent()) {
+            amountSold = Optional.of(amountBought.get().multiply(exchangeRate).setScale(SCALE, BigDecimal.ROUND_HALF_UP));
+        } else if (( ! amountBought.isPresent()) && (amountSold.isPresent())) {
+            amountBought = Optional.of(amountSold.get().multiply(exchangeRate).setScale(SCALE, BigDecimal.ROUND_HALF_UP));
         } else {
             throw new IllegalStateException ();
         }
@@ -170,7 +153,7 @@ public class ExchangeTransaction {
             return false;
         }
         // Exactly one amount must be specified in a properly ordered exchange transaction...
-        if ((amountSold != null) == (amountBought != null)) {
+        if ((amountSold.isPresent()) == (amountBought.isPresent())) {
             return false;
         }
         if (rateDirection == null) {
@@ -189,9 +172,9 @@ public class ExchangeTransaction {
      */
     public BigDecimal getSignedAmount (Currency currency) {
         if (currency == currencySold) {
-            return amountSold != null ? amountSold.negate() : null;
+            return amountSold != null ? amountSold.get().negate() : null;
         } else if (currency == currencyBought) {
-            return amountBought;
+            return amountBought.get();
         }
         throw new IllegalArgumentException ("Invalid currency.");
     }

@@ -30,13 +30,13 @@ class ExchangeTransactionTest {
         uut.setExchangeRate(new BigDecimal (0.25));
 //        assertEquals(ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD, uut.getRateDirection());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(null, uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(null, uut.getAmountBought().orElseGet(() -> null));
         //
         uut.setExchangeTimestamp(new Date());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         assertTrue(uut.getExchangeTimestamp() != null);
     }
 
@@ -47,13 +47,13 @@ class ExchangeTransactionTest {
         uut.setExchangeRate(new BigDecimal (4));
         assertEquals(ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD, uut.getRateDirection());
         //
-        assertEquals(null, uut.getAmountSold());
-        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought());
+        assertEquals(null, uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         //
         uut.setExchangeTimestamp(new Date());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (0.75).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         assertTrue(uut.getExchangeTimestamp() != null);
     }
 
@@ -64,13 +64,13 @@ class ExchangeTransactionTest {
         uut.setExchangeRate(new BigDecimal (4));
         assertEquals(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT, uut.getRateDirection());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(null, uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(null, uut.getAmountBought().orElseGet(() -> null));
         //
         uut.setExchangeTimestamp(new Date());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         assertTrue(uut.getExchangeTimestamp() != null);
     }
 
@@ -81,13 +81,13 @@ class ExchangeTransactionTest {
         uut.setExchangeRate(new BigDecimal (0.25));
 //        assertEquals(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT, uut.getRateDirection());
         //
-        assertEquals(null, uut.getAmountSold());
-        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought());
+        assertEquals(null, uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         //
         uut.setExchangeTimestamp(new Date());
         //
-        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold());
-        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought());
+        assertEquals(new BigDecimal (3.0).setScale(2), uut.getAmountSold().orElseGet(() -> null));
+        assertEquals(new BigDecimal (12).setScale(2), uut.getAmountBought().orElseGet(() -> null));
         assertTrue(uut.getExchangeTimestamp() != null);
     }
 }
