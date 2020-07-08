@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
+/**
+ * TODO: invalidate cache!
+ */
 @Component
 public class RateService {
 
@@ -51,10 +54,10 @@ public class RateService {
     public BigDecimal getExchangeRate (Currency currency1, Currency currency2) {
         BigDecimal rate = rateReport.getMid();
         if ((currency1 == Currency.getInstance("USD")) && (currency2 == Currency.getInstance("PLN"))) {
-            return rate;
+            return rate.setScale(4, BigDecimal.ROUND_HALF_UP);
         } else if ((currency1 == Currency.getInstance("PLN")) && (currency2 == Currency.getInstance("USD"))) {
             // TODO: figure out business rules on precision
-            return BigDecimal.ONE.divide(rate);
+            return BigDecimal.ONE.divide(rate, 4, BigDecimal.ROUND_HALF_UP);
         } else {
             throw new IllegalArgumentException ();
         }

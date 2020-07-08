@@ -18,7 +18,7 @@ import java.util.Date;
  * in either currency. The amount expressed in the other currency must be omitted at this stage.
  * </p><p>
  * An ordered {@link ExchangeTransaction} is then amended with exchange rate ({@link #setExchangeRate(BigDecimal)}
- * and {@link #setRateDirection(RateDirection)}) necessary for its execution. Once amended, the exchange transaction
+ * and {@link #getRateDirection()}) necessary for its execution. Once amended, the exchange transaction
  * becomes "ready".
  * </p><p>
  * Finally, the transaction becomes completed with a call to {@link #setExchangeTimestamp(Date)}.
@@ -28,7 +28,7 @@ import java.util.Date;
  */
 public class ExchangeTransaction {
 
-    private final static MathContext mathContext = new MathContext (2, RoundingMode.HALF_UP);
+    private static final int SCALE = 2;
 
     private Currency currencySold;
     private BigDecimal amountSold;
@@ -49,8 +49,15 @@ public class ExchangeTransaction {
     public ExchangeTransaction (Currency currencySold, BigDecimal amountSold, Currency currencyBought, BigDecimal amountBought) {
         this.currencySold = currencySold;
         this.currencyBought = currencyBought;
-        this.amountSold = amountSold != null ? amountSold.setScale(2) : null;
-        this.amountBought = amountBought != null ? amountBought.setScale(2) : null;
+        this.amountSold = amountSold != null ? amountSold.setScale(SCALE, BigDecimal.ROUND_HALF_UP) : null;
+        this.amountBought = amountBought != null ? amountBought.setScale(SCALE, BigDecimal.ROUND_HALF_UP) : null;
+        if ((amountSold != null) && (amountBought == null)) {
+            this.rateDirection = RateDirection.SOLD_VS_BOUGHT;
+        } else if ((amountSold == null) && (amountBought != null)) {
+            this.rateDirection = RateDirection.BOUGHT_VS_SOLD;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -96,7 +103,7 @@ public class ExchangeTransaction {
 
     /**
      * Sets the exchange rate between the currencies involved in the transaction.
-     * See {@link #setRateDirection(RateDirection)} on how to interpret it.
+     * See {@link #getRateDirection()} on how to interpret it.
      * @return
      */
     public void setExchangeRate (BigDecimal exchangeRate) {
@@ -107,9 +114,9 @@ public class ExchangeTransaction {
         return rateDirection;
     }
 
-    public void setRateDirection (RateDirection rateDirection) {
-        this.rateDirection = rateDirection;
-    }
+//    public void setRateDirection (RateDirection rateDirection) {
+//        this.rateDirection = rateDirection;
+//    }
 
     public Date getExchangeTimestamp () {
         // FIXME leaky accessor
@@ -126,27 +133,27 @@ public class ExchangeTransaction {
         if ((amountSold == null) && (amountBought != null)) {
             switch (rateDirection) {
                 case BOUGHT_VS_SOLD:
-                    amountSold = amountBought.multiply(exchangeRate, mathContext);
+                    amountSold = amountBought.multiply(exchangeRate);
                     break;
                 case SOLD_VS_BOUGHT:
-                    amountSold = amountBought.divide(exchangeRate, mathContext);
+                    amountSold = amountBought.multiply(exchangeRate);
                     break;
                 default:
                     throw new IllegalArgumentException ();
             }
-            amountSold = amountSold.setScale(2);
+            amountSold = amountSold.setScale(SCALE, BigDecimal.ROUND_HALF_UP);
         } else if ((amountBought == null) && (amountSold != null)) {
             switch (rateDirection) {
                 case SOLD_VS_BOUGHT:
-                    amountBought = amountSold.multiply(exchangeRate, mathContext);
+                    amountBought = amountSold.multiply(exchangeRate);
                     break;
                 case BOUGHT_VS_SOLD:
-                    amountBought = amountSold.divide(exchangeRate, mathContext);
+                    amountBought = amountSold.multiply(exchangeRate);
                     break;
                 default:
                     throw new IllegalArgumentException ();
             }
-            amountBought = amountBought.setScale(2);
+            amountBought = amountBought.setScale(SCALE, BigDecimal.ROUND_HALF_UP);
         } else {
             throw new IllegalStateException ();
         }
@@ -154,6 +161,10 @@ public class ExchangeTransaction {
         this.exchangeTimestamp = exchangeTimestamp;
     }
 
+    /**
+     * Checks whether this exchange transaction is in the "ordered" state.
+     * @return
+     */
     public boolean isProperlyOrdered () {
         if ((currencySold == null) || (currencyBought == null) || (currencySold == currencyBought)) {
             return false;
@@ -162,7 +173,10 @@ public class ExchangeTransaction {
         if ((amountSold != null) == (amountBought != null)) {
             return false;
         }
-        if ((exchangeRate != null) || (exchangeTimestamp != null) && (rateDirection != null)) {
+        if (rateDirection == null) {
+            return false;
+        }
+        if ((exchangeRate != null) || (exchangeTimestamp != null)) {
             return false;
         }
         return true;

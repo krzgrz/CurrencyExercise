@@ -83,24 +83,35 @@ public class ExchangeRestController {
 
 
     @PostMapping("/rest-api/exchange/{pesel}")
-    public ResponseEntity <Void> orderTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {
+    public ResponseEntity <Void> createExchangeTransaction (@PathVariable String pesel, @RequestBody ExchangeTransaction exchangeTransaction) {
         if ( ! exchangeTransaction.isProperlyOrdered()) {
             throw new IllegalArgumentException();
         }
         // TODO: this code may need generalization if more currencies are to be supported...
         Currency usd = Currency.getInstance("USD");
         Currency pln = Currency.getInstance("PLN");
-        BigDecimal exchangeRate = rateService.getExchangeRate(usd, pln);
-        ExchangeTransaction.RateDirection rateDirection = null;
-        if ((exchangeTransaction.getCurrencyBought() == usd) && (exchangeTransaction.getCurrencySold() == pln)) {
-            rateDirection = ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD;
-        } else if ((exchangeTransaction.getCurrencySold() == usd) && (exchangeTransaction.getCurrencyBought() == pln)) {
-            rateDirection = ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT;
-        } else {
-            throw new IllegalArgumentException ("Unsupported currency pair: " + exchangeTransaction.getCurrencySold() + "/" + exchangeTransaction.getCurrencyBought());
+        BigDecimal exchangeRate = null;
+        switch (exchangeTransaction.getRateDirection()) {
+            case BOUGHT_VS_SOLD:
+                exchangeRate = rateService.getExchangeRate(exchangeTransaction.getCurrencyBought(), exchangeTransaction.getCurrencySold());
+                break;
+            case SOLD_VS_BOUGHT:
+                exchangeRate = rateService.getExchangeRate( exchangeTransaction.getCurrencySold(), exchangeTransaction.getCurrencyBought());
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
+//
+//        ExchangeTransaction.RateDirection rateDirection = null;
+//        if ((exchangeTransaction.getCurrencyBought() == usd) && (exchangeTransaction.getCurrencySold() == pln)) {
+//            rateDirection = ExchangeTransaction.RateDirection.BOUGHT_VS_SOLD;
+//        } else if ((exchangeTransaction.getCurrencySold() == usd) && (exchangeTransaction.getCurrencyBought() == pln)) {
+//            rateDirection = ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT;
+//        } else {
+//            throw new IllegalArgumentException ("Unsupported currency pair: " + exchangeTransaction.getCurrencySold() + "/" + exchangeTransaction.getCurrencyBought());
+//        }
         exchangeTransaction.setExchangeRate(exchangeRate);
-        exchangeTransaction.setRateDirection(rateDirection);
+//        exchangeTransaction.setRateDirection(rateDirection);
         // Complete exchange transaction...
         exchangeTransaction.setExchangeTimestamp(new Date ());
         //

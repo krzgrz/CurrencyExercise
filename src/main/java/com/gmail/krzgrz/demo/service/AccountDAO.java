@@ -25,7 +25,7 @@ public class AccountDAO {
         Account account = accounts.get(accountRegistration.getPesel());
 
         ExchangeTransaction exchangeTransaction = new ExchangeTransaction (Currency.getInstance("PLN"), new BigDecimal (7), Currency.getInstance("USD"), null);
-        exchangeTransaction.setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
+//        exchangeTransaction.setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
         exchangeTransaction.setExchangeRate(new BigDecimal(1.23));
         exchangeTransaction.setExchangeTimestamp(dateFormat.parse("2020-07-04 13:23:45"));
         account.addExchangeTransaction(exchangeTransaction);
