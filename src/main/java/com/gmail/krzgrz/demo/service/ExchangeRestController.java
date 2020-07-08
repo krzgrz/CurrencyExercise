@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gmail.krzgrz.demo.domain.AccountRegistration;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Provides REST API for our two services: account registration and exchange transactions.
@@ -28,7 +29,7 @@ import com.gmail.krzgrz.demo.domain.AccountRegistration;
 @RestController
 public class ExchangeRestController {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     AccountDAO accountDAO;
@@ -54,11 +55,13 @@ public class ExchangeRestController {
      * @param accountRegistration
      * @return
      */
-    @PostMapping("/registration")
+    @PostMapping("/rest-api/registration")
     public ResponseEntity <Void> createAccount (@RequestBody AccountRegistration accountRegistration) {
         // TODO Check DOB in the correct timezone
         logger.info("Post: " + accountRegistration);
-        logger.info("Post: " + accountDAO);
+        if (accountDAO.getAccountRegistration(accountRegistration.getPesel()) != null) {
+            throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "Account already exists.");
+        }
         accountDAO.save(accountRegistration);
         return new  ResponseEntity <Void> (HttpStatus.CREATED);
     }

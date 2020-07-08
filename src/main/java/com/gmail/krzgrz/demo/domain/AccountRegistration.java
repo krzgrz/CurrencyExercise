@@ -3,21 +3,33 @@ package com.gmail.krzgrz.demo.domain;
 import java.math.BigDecimal;
 
 /**
- *
+ * This class keeps account metadata, such as first/last name.
  * @author kgrzeda
  */
 public class AccountRegistration {
 
     private String pesel;
-
     private String firstName;
-
     private String lastName;
 
+    /**
+     * Initial account balance in PLN.
+     * TODO: that does not really belong in here, think of moving it somewhere.
+     */
     private BigDecimal initialBalancePLN;
 
-    public String getPesel() {
-        return pesel;
+    public AccountRegistration (){
+    }
+
+    public AccountRegistration(String pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
+        this.pesel = pesel;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.initialBalancePLN = initialBalancePLN;
+    }
+
+    public PESEL getPesel() {
+        return new PESEL (pesel);
     }
 
     public String getFirstName() {
@@ -31,16 +43,4 @@ public class AccountRegistration {
     public BigDecimal getInitialBalancePLN() {
         return initialBalancePLN;
     }
-
-    public AccountRegistration(){
-
-    }
-
-    public AccountRegistration(String pesel, String firstName, String lastName, BigDecimal initialBalancePLN) {
-        this.pesel = pesel;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.initialBalancePLN = initialBalancePLN;
-    }
-
 }

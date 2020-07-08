@@ -25,7 +25,7 @@ public class AccountDAO {
         AccountRegistration accountRegistration = new AccountRegistration ("11122233344", "Adam", "Asnyk", new BigDecimal (123));
         save(accountRegistration);
 
-        Account account = accounts.get(new PESEL (accountRegistration.getPesel()));
+        Account account = accounts.get(accountRegistration.getPesel());
 
         ExchangeTransaction exchangeTransaction = new ExchangeTransaction (Currency.PLN, new BigDecimal (7), Currency.USD, null);
         exchangeTransaction.setRateDirection(ExchangeTransaction.RateDirection.SOLD_VS_BOUGHT);
@@ -59,16 +59,16 @@ public class AccountDAO {
         return accounts.values().stream().map(Account::getAccountRegistration).collect(Collectors.toList());
     }
 
+    /**
+     * Saves given {@link AccountRegistration}, implicitly creating a new account if needed.
+     * @param accountRegistration
+     */
     public void save (AccountRegistration accountRegistration) {
-        PESEL pesel = new PESEL (accountRegistration.getPesel());
+        PESEL pesel = accountRegistration.getPesel();
         synchronized (accounts) {
-            if (accounts.containsKey(pesel)) {
-                throw new IllegalArgumentException ("Duplicate");
-            }
-            Account account = new Account ();
+            Account account = accounts.getOrDefault(pesel, new Account ());
             account.setAccountRegistration(accountRegistration);
             accounts.put(pesel, account);
-//            histories.put(pesel, new ArrayList ());
         }
     }
 
@@ -79,9 +79,8 @@ public class AccountDAO {
     }
 
     public void save (AccountRegistration accountRegistration, ExchangeTransaction exchangeTransaction) {
-        PESEL pesel = new PESEL (accountRegistration.getPesel());
+        PESEL pesel = accountRegistration.getPesel();
         Account account = accounts.get(pesel);
         account.addExchangeTransaction(exchangeTransaction);
     }
-
 }

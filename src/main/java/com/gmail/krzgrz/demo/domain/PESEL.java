@@ -12,8 +12,8 @@ public class PESEL {
 
     private static final String pattern = "\\d{11}";
 
-    /** Date format needed to extract DOB from the PESEL. */
-    private static final DateFormat dateFormat = new SimpleDateFormat ("yyMMdd");
+    /** Timezone for extracting DOB from the PESEL. */
+    public static final TimeZone timeZone = TimeZone.getTimeZone("Europe/Warsaw");
 
     private String pesel;
 
@@ -42,6 +42,10 @@ public class PESEL {
         return pesel;
     }
 
+    /**
+     * Extracts person's date of bit\rth from this PESEL.
+     * @return  Midnight in the selected {@link #timeZone} on the person's DOB.
+     */
     public Date getDateOfBirth () {
         String date = pesel.substring(0, 6);
         Integer year = Integer.parseInt(pesel.substring(0, 2));
@@ -51,7 +55,7 @@ public class PESEL {
         for (int i = 0; i < centuries.length; i++) {
             if ((month - i * 20 >= 1) && (month - i * 20 <= 12)) {
                 Calendar calendar = GregorianCalendar.getInstance();
-                calendar.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
+                calendar.setTimeZone(timeZone);
                 calendar.set(centuries[i] + year, month - i * 20 - 1, day, 0, 0);
                 return new Date (calendar.getTimeInMillis());
             }

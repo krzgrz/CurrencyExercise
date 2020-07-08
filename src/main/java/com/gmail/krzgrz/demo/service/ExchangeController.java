@@ -3,6 +3,8 @@ package com.gmail.krzgrz.demo.service;
 import com.gmail.krzgrz.demo.domain.Currency;
 import com.gmail.krzgrz.demo.domain.ExchangeTransaction;
 import com.gmail.krzgrz.demo.domain.PESEL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,8 @@ import java.util.function.Function;
  */
 @Controller
 public class ExchangeController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     AccountDAO accountDAO;
@@ -66,6 +70,7 @@ public class ExchangeController {
     /** List all accounts in the application. */
     @GetMapping("/account")
     public ModelAndView getRegistration () {
+        logger.info("getAllAccounts");
         ModelAndView mv = new ModelAndView ();
         mv.setViewName("registration");
         mv.addObject("accountRegistrations", accountDAO.getAllAccountRegistrations());
